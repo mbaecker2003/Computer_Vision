@@ -8,15 +8,28 @@ find_package(OpenCV REQUIRED)
 include_directories(${OpenCV_INCLUDE_DIRS})
 
 # Include-path for Classes
-include_directories(${CMAKE_CURRENT_SOURCE_DIR}/BasicTransformation)
+include_directories(
+    ${CMAKE_CURRENT_SOURCE_DIR}/BasicTransformation
+    ${CMAKE_CURRENT_SOURCE_DIR}/HoughTransformation
+)
+
+# Include-path for Classes
+include_directories(
+    ${CMAKE_CURRENT_SOURCE_DIR}/BasicTransformation
+    ${CMAKE_CURRENT_SOURCE_DIR}/HoughTransformation
+)
 
 # Add Files for Classes
 set(BasicTransformation_SOURCES
     BasicTransformation/BasicTransformation.cpp
 )
 
+set(HoughTransformation_SOURCES
+    HoughTransformation/HoughTransformation.cpp
+)
+
 # Add executable in main.cpp
-add_executable(main main.cpp ${BasicTransformation_SOURCES})
+add_executable(main main.cpp ${BasicTransformation_SOURCES} ${HoughTransformation_SOURCES})
 
 # Link OpenCV-libary with executable
 target_link_libraries(main ${OpenCV_LIBS})
