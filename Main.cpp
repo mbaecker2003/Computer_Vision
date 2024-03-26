@@ -2,10 +2,32 @@
 #include <opencv2/opencv.hpp>
 #include<vector>
 #include <array>
+#include <string>
+
+#include "BasicTransformation/BasicTransformation.h"
 
 
 using namespace cv;
 using namespace std;
+
+// Function to convert vector<vector<int>> to cv::Mat
+Mat grayscaleVectorToMat(const vector<vector<int>>& pixels) {
+    // Get image dimensions
+    int rows = pixels.size();
+    int cols = pixels[0].size();
+
+    // Create a Mat object with the same dimensions
+    Mat image(rows, cols, CV_8UC1);
+
+    // Iterate through the pixels and assign values to the Mat object
+    for (int i = 0; i < rows; ++i) {
+        for (int j = 0; j < cols; ++j) {
+            image.at<uchar>(i, j) = static_cast<uchar>(pixels[i][j]);
+        }
+    }
+
+    return image;
+}
 
 int main(int argc, char** argv )
 {
@@ -23,23 +45,26 @@ int main(int argc, char** argv )
     int imageColumns = image.cols;
 
     // Vector to store pixle information
-    vector<vector<array<int, 3>>> pixles(imageRows, vector<array<int, 3>>(imageColumns));
+    vector<vector<array<int, 3>>> pixels(imageRows, vector<array<int, 3>>(imageColumns));
 
     // Get RGB-values of the image
     for(int x=0; x<imageColumns; x++){
         for(int y=0; y<imageRows; y++){
-            Vec3d pixleVector = image.at<Vec3d>(y,x);
+            Vec3b pixleVector = image.at<Vec3b>(y,x);
 
             // Save {0:Red, 1:Green, 2:Blue} Color value as an int-Array
-            pixles[x][y] = {(int) pixleVector[2], (int) pixleVector[1], (int) pixleVector[0]};
+            pixels[y][x] = {(int) pixleVector[2], (int) pixleVector[1], (int) pixleVector[0]};
         }
     }
 
+    // Creating an object of BasicTransformation and calling constructor
+    BasicTransformation obj(pixels);
 
-
+    // Calling member function to convert to grayscale
+    vector<vector<int>> grayscalePixels = obj.grayscale();
 
     namedWindow("Display Image", WINDOW_AUTOSIZE);
-    imshow("Display Image", image);
+    imshow("Display Image", grayscaleVectorToMat(grayscalePixels));
     waitKey(0);
     return 0;
 }
