@@ -1,0 +1,5 @@
+# Hide build folder created by CMake
+**/build/
+
+# Hide VS-Code folder created by CMake
+**/.vscode/
