@@ -13,8 +13,8 @@ using namespace std;
 // Function to convert vector<vector<int>> to cv::Mat
 Mat grayscaleVectorToMat(const vector<vector<int>>& pixels) {
     // Get image dimensions
-    int rows = pixels.size();
-    int cols = pixels[0].size();
+    int rows = pixels.empty() ? 0 : pixels.size();
+    int cols = rows == 0 || pixels[0].empty() ? 0 : pixels[0].size();
 
     // Create a Mat object with the same dimensions
     Mat image(rows, cols, CV_8UC1);
@@ -58,13 +58,19 @@ int main(int argc, char** argv )
     }
 
     // Creating an object of BasicTransformation and calling constructor
-    BasicTransformation obj(pixels);
+    BasicTransformation gray(pixels);
 
     // Calling member function to convert to grayscale
-    vector<vector<int>> grayscalePixels = obj.grayscale();
+    vector<vector<int>> grayscalePixels = gray.grayscale();
+
+    BasicTransformation edge(grayscalePixels);
+    vector<vector<int>> edges = edge.sobelEdgeDetection(true, 70);
+
+
+
 
     namedWindow("Display Image", WINDOW_AUTOSIZE);
-    imshow("Display Image", grayscaleVectorToMat(grayscalePixels));
+    imshow("Display Image", grayscaleVectorToMat(edges));
     waitKey(0);
     return 0;
 }
